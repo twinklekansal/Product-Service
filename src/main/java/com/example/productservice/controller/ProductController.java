@@ -1,6 +1,7 @@
 package com.example.productservice.controller;
 
 import com.example.productservice.model.Product;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,14 @@ public class ProductController {
 
     //http://localhost:8080/addProduct
     @PostMapping("/addProduct")
-    public Product addProduct(@RequestBody Product product){
+    public ResponseEntity<Object> addProduct(@RequestBody Product product){
+        if (product.getName().isEmpty() || product.getSellingPrice()==0
+                || product.getName().toLowerCase().contains("test")){
+            return ResponseEntity.badRequest().body("Invalid input");
+        }
+
         products.add(product);
-        return product;
+        return ResponseEntity.ok(product);
     }
 
     //to view products with more than 50% discount
